@@ -1,5 +1,6 @@
 #include "psic.h"
 #include <QDebug>
+#include <QThread>
 
 psic::psic(QObject *parent) :
     QObject(parent)
@@ -54,6 +55,8 @@ void psic::writeData(QString data)
         connectToHost(lastHost);
 
     socket->write(data.toLocal8Bit());
+
+    QThread::msleep(25);
 
     if (socket->waitForBytesWritten())
     {
