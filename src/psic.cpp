@@ -33,7 +33,7 @@ void psic::connectToHost(QString host)
 
     socket->connectToHost(host, 5025);
 
-    if (socket->waitForConnected())
+    if (socket->waitForConnected(3000))
     {
         qDebug() << "success";
         lastHost = host;
@@ -58,7 +58,7 @@ void psic::writeData(QString data)
 
     QThread::msleep(25);
 
-    if (socket->waitForBytesWritten())
+    if (socket->waitForBytesWritten(3000))
     {
         qDebug() << "success";
         emit writeSuccess();
