@@ -1,7 +1,3 @@
-/*
-
-*/
-
 
 #include <sailfishapp.h>
 #include <QtQml>

@@ -41,12 +41,58 @@ Page
             {
                 text: psic.status
             }
+
+            Button
+            {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Reset"
+                onClicked: psic.reset()
+            }
+
+            TextSwitch
+            {
+                id: outputControlSwitch
+                text: "Output control"
+                onCheckedChanged:
+                {
+                    if (checked)
+                        psic.writeData("OUTP 1\n")
+                    else
+                        psic.writeData("OUTP 0\n")
+                }
+            }
+
+            Slider
+            {
+                id: voltageSlider
+                label: "Voltage"
+                width: parent.width
+                minimumValue: 0
+                maximumValue: 200
+                value: 0
+                valueText: value + " V"
+                stepSize: 1
+                onValueChanged: psic.writeData("VOLT " + value + "\n")
+            }
+            Slider
+            {
+                id: currentSlider
+                label: "Current"
+                width: parent.width
+                minimumValue: 0
+                maximumValue: 2
+                value: 0
+                valueText: value + " A"
+                stepSize: 0.1
+                onValueChanged: psic.writeData("CURR " + value + "\n")
+            }
             Label
             {
                 text: psic.lastReply
                 wrapMode: Text.WrapAnywhere
                 width: parent.width
             }
+
         }
     }
 
@@ -68,6 +114,7 @@ Page
         {
             status = "connected"
             console.log("success")
+            reset()
             writeData("*IDN?\n")
         }
 
@@ -75,6 +122,17 @@ Page
         {
             lastReply = readData()
             console.log("replied: " + lastReply)
+        }
+
+        function reset()
+        {
+            psic.writeData("*RST\n")
+            outputControlSwitch.checked = false
+            psic.writeData("OUTP 0\n")
+            voltageSlider.value = 0
+            psic.writeData("VOLT 0\n")
+            currentSlider.value = 0
+            psic.writeData("CURR 0\n")
         }
     }
 
