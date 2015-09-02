@@ -127,12 +127,7 @@ Page
         function reset()
         {
             psic.writeData("*RST\n")
-            outputControlSwitch.checked = false
-            psic.writeData("OUTP 0\n")
-            voltageSlider.value = 0
-            psic.writeData("VOLT 0\n")
-            currentSlider.value = 0
-            psic.writeData("CURR 0\n")
+            clearOutputTimer.start()
         }
     }
 
@@ -144,6 +139,28 @@ Page
         {
             psic.status = "connecting"
             psic.connectToHost(psic.host)
+        }
+    }
+
+    Timer
+    {
+        id: clearOutputTimer
+        running: false
+        interval: 200
+        onTriggered:
+        {
+            if (outputControlSwitch.checked)
+                outputControlSwitch.checked = false
+            else
+                psic.writeData("OUTP 0\n")
+            if (voltageSlider.value != 0)
+                voltageSlider.value = 0
+            else
+                psic.writeData("VOLT 0\n")
+            if (currentSlider.value != 0)
+                currentSlider.value = 0
+            else
+                psic.writeData("CURR 0\n")
         }
     }
 

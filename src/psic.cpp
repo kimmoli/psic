@@ -35,6 +35,7 @@ void psic::connectToHost(QString host)
     if (socket->waitForConnected())
     {
         qDebug() << "success";
+        lastHost = host;
         emit connectSuccess();
     }
     else
@@ -48,12 +49,9 @@ void psic::writeData(QString data)
 {
     qDebug() << "writing" << data;
 
+    /* If connection dropped, brutally reconnect */
     if(socket->state() != QAbstractSocket::ConnectedState)
-    {
-        qDebug() << "fail - not connected";
-        emit writeFail();
-        return;
-    }
+        connectToHost(lastHost);
 
     socket->write(data.toLocal8Bit());
 

@@ -28,6 +28,7 @@ public slots:
 private:
     QTcpSocket *socket;
     QString rxBuffer;
+    QString lastHost;
 };
 
 #endif // PSIC_H
